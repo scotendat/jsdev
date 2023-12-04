@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ToDo List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+    </style>
+</head>
+<body>
+    <h1>ToDo List</h1>
+    <ul id="taskList"></ul>
+    <input type="text" id="newTask" placeholder="Enter a new task">
+    <button onclick="addTask()">Add Task</button>
+    <button onclick="removeTask()">Remove Task</button>
+    <script>
+        let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+
+        function addTask() {
+            const newTaskInput = document.getElementById('newTask');
+            const newTask = newTaskInput.value.trim();
+            if (newTask !== '') {
+                tasks.push(newTask);
+                newTaskInput.value = '';
+                updateTaskList();
+                saveTasksToLocalStorage();
+            }
+        }
+
+        function removeTask() {
+            const taskList = document.getElementById('taskList');
+            const selectedTaskIndex = taskList.selectedIndex;
+            if (selectedTaskIndex !== -1) {
+                tasks.splice(selectedTaskIndex, 1);
+                updateTaskList();
+                saveTasksToLocalStorage();
+            }
+        }
+
+        function updateTaskList() {
+            const taskList = document.getElementById('taskList');
+            taskList.innerHTML = '';
+            tasks.forEach((task, index) => {
+                const listItem = document.createElement('li');
+                listItem.textContent = `${index + 1}. ${task}`;
+                taskList.appendChild(listItem);
+            });
+        }
+
+        function saveTasksToLocalStorage() {
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+        }
+
+        // Initial rendering
+        updateTaskList();
+    </script>
+</body>
+</html>
